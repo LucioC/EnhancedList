@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ import java.util.List;
 import de.timroes.android.listview.EnhancedList;
 import de.timroes.android.listview.EnhancedListAdapter;
 import de.timroes.android.listview.EnhancedListView;
+import de.timroes.android.listview.EnhancedRecyclerListTouchListener;
 import de.timroes.android.listview.EnhancedRecyclerListView;
 import de.timroes.android.listview.SwipeDirection;
 import de.timroes.android.listview.UndoStyle;
@@ -148,6 +150,7 @@ public class MainActivityRecycler extends ActionBarActivity {
 
                 final String item = (String) mAdapter.getItem(position);
                 mAdapter.remove(position);
+                mAdapter.notifyDataSetChanged();
                 return new Undoable() {
                     @Override
                     public void undo() {
@@ -156,6 +159,8 @@ public class MainActivityRecycler extends ActionBarActivity {
                 };
             }
         });
+
+        mListView.addOnItemTouchListener(new EnhancedRecyclerListTouchListener(getApplicationContext(), mListView));
 
         mListView.setSwipingLayout(R.id.swiping_layout);
 
@@ -323,28 +328,28 @@ public class MainActivityRecycler extends ActionBarActivity {
         }
 
         @Override
-        public void onBindViewHolder(EnhancedRecyclerAdapter.ViewHolder holder, final int position) {
+        public void onBindViewHolder(final EnhancedRecyclerAdapter.ViewHolder holder, final int position) {
             holder.itemView.findViewById(R.id.action_delete).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListView.delete(position);
+                    mListView.delete(holder.itemView);
                 }
             });
 
-//            holder.itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(MainActivity.this, "Clicked on item " + mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//
-//            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View v) {
-//                    Toast.makeText(MainActivity.this, "Long clicked on item " + mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
-//                    return true;
-//                }
-//            });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(MainActivityRecycler.this, "Clicked on item " + mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Toast.makeText(MainActivityRecycler.this, "Long clicked on item " + mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
 
             holder.textView = (TextView) holder.itemView.findViewById(R.id.text);
             holder.position = position;
