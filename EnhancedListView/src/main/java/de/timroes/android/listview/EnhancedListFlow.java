@@ -535,13 +535,12 @@ public class EnhancedListFlow {
                     if (Math.abs(deltaX) > slop) {
                         swiping = true;
 
-//                        // Cancel ListView's touch (un-highlighting the item)
+//                        // Cancel child view touch
                         MotionEvent cancelEvent = MotionEvent.obtain(ev);
                         cancelEvent.setAction(MotionEvent.ACTION_CANCEL
                                 | (ev.getActionIndex()
                                 << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
                         swipeDownChild.dispatchTouchEvent(cancelEvent);
-//                        enhancedList.superOnTouchEvent(cancelEvent);
                     }
                 } else {
                     // If we swiped into wrong direction, act like this was the new

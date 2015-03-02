@@ -150,7 +150,6 @@ public class MainActivityRecycler extends ActionBarActivity {
 
                 final String item = (String) mAdapter.getItem(position);
                 mAdapter.remove(position);
-                mAdapter.notifyDataSetChanged();
                 return new Undoable() {
                     @Override
                     public void undo() {
@@ -159,8 +158,6 @@ public class MainActivityRecycler extends ActionBarActivity {
                 };
             }
         });
-
-        mListView.addOnItemTouchListener(new EnhancedRecyclerListTouchListener(getApplicationContext(), mListView));
 
         mListView.setSwipingLayout(R.id.swiping_layout);
 
