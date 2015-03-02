@@ -56,10 +56,7 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
         super(context);
         enhancedListFlow.init(context, this);
 
-        this.setHasFixedSize(false);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        this.setLayoutManager(linearLayoutManager);
-        this.setItemAnimator(null);
+        initRecyclerView(context);
 
     }
 
@@ -67,20 +64,22 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
         super(context, attrs);
         enhancedListFlow.init(context, this);
 
-        this.setHasFixedSize(false);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        this.setLayoutManager(linearLayoutManager);
-        this.setItemAnimator(null);
+        initRecyclerView(context);
     }
 
     public EnhancedRecyclerListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         enhancedListFlow.init(context, this);
 
+        initRecyclerView(context);
+    }
+
+    private void initRecyclerView(Context context) {
         this.setHasFixedSize(false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         this.setLayoutManager(linearLayoutManager);
         this.setItemAnimator(null);
+        this.addOnItemTouchListener(new EnhancedRecyclerListTouchListener(context, this));
     }
 
     @Override
@@ -239,7 +238,11 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        return enhancedListFlow.onTouchEvent(ev);
+        return super.onTouchEvent(ev);
+    }
+
+    public boolean onTouchEventCustom(MotionEvent ev) {
+        return enhancedListFlow.onTouchEventNew(ev, this);
     }
 
     @Override
@@ -452,4 +455,21 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
         enhancedListFlow.delete(position);
     }
 
+    public void delete(View view) {
+        if (!this.hasDismissCallback()) {
+            throw new IllegalStateException("You must set an OnDismissCallback, before deleting items.");
+        }
+        int index = this.indexOfChild(view);
+        if (index >= 0) {
+            index = this.getChildPosition(view);
+            View swipingLayout = null;
+            if (this.hasSwipingLayout()) {
+                swipingLayout = view.findViewById(this.getSwipingLayout());
+            }
+            if (swipingLayout == null) {
+                swipingLayout = view;
+            }
+            this.slideOutView(swipingLayout, view, index, true);
+        }
+    }
 }
