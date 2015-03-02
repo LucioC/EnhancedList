@@ -12,7 +12,7 @@ Development Updates
 
 - A complete refactoring was made from the old timroes project to split classes into different files, and extract some common behaviors and interfaces
 - So far, the old ListView version still exist and should work the same
-- A first version seems to be working fine
+- The recycler view version is under development... appears to be hard to keep both the click listeners for internal views and the touch events for the swipe motion. 
 
 Development TODO list
 ------------------
