@@ -1,4 +1,4 @@
-package de.timroes.android.listview;
+package com.luciocossio.android.enhancedlist;
 
 import android.content.Context;
 import android.os.Build;
@@ -108,7 +108,7 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
     }
 
     @Override
-    public void setOnScrollListener(final de.timroes.android.listview.OnScrollListener onScrollListener) {
+    public void setOnScrollListener(final com.luciocossio.android.enhancedlist.OnScrollListener onScrollListener) {
         this.setOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {

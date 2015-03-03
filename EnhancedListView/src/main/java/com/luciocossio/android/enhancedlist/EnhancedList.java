@@ -1,9 +1,4 @@
-package de.timroes.android.listview;
-
-import android.widget.AbsListView;
-import android.widget.Button;
-import android.widget.PopupWindow;
-import android.widget.TextView;
+package com.luciocossio.android.enhancedlist;
 
 public interface EnhancedList {
 

@@ -1,4 +1,4 @@
-package de.timroes.android.listview;
+package com.luciocossio.android.enhancedlist;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -128,7 +128,7 @@ public class EnhancedListFlow {
     /**
      * Discard all stored undos and hide the undo popup dialog.
      * This method must be called in {@link android.app.Activity#onStop()}. Otherwise
-     * {@link de.timroes.android.listview.Undoable#discard()} might not be called for several items, what might
+     * {@link com.luciocossio.android.enhancedlist.Undoable#discard()} might not be called for several items, what might
      * break your data consistency.
      */
     public void discardUndo() {
@@ -148,8 +148,8 @@ public class EnhancedListFlow {
      *
      * @param position The position of the item in the list.
      * @throws java.lang.IndexOutOfBoundsException when trying to delete an item outside of the list range.
-     * @throws java.lang.IllegalStateException     when this method is called before an {@link de.timroes.android.listview.OnDismissCallback}
-     *                                             is set via {@link de.timroes.android.listview.EnhancedListView#setDismissCallback(de.timroes.android.listview.OnDismissCallback)}.
+     * @throws java.lang.IllegalStateException     when this method is called before an {@link com.luciocossio.android.enhancedlist.OnDismissCallback}
+     *                                             is set via {@link com.luciocossio.android.enhancedlist.EnhancedListView#setDismissCallback(com.luciocossio.android.enhancedlist.OnDismissCallback)}.
      */
     public void delete(int position) {
         if (!enhancedList.hasDismissCallback()) {
