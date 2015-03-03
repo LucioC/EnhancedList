@@ -1,6 +1,6 @@
 A fork of https://github.com/timroes/EnhancedListView, since the original author no longer supports it.
 
-EnhancedListView
+EnhancedList
 =============================
 
 An Android ListView with enhanced functionality (e.g. Swipe To Dismiss and Undo)
