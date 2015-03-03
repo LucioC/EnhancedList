@@ -1,8 +1,8 @@
-package de.timroes.android.listview;
+package com.luciocossio.android.enhancedlist;
 
 /**
  * Defines the style in which <i>undos</i> should be displayed and handled in the list.
- * Pass this to {@link de.timroes.android.listview.EnhancedListView#setUndoStyle(UndoStyle)}
+ * Pass this to {@link com.luciocossio.android.enhancedlist.EnhancedListView#setUndoStyle(UndoStyle)}
  * to change the default behavior from {@link #SINGLE_POPUP}.
  */
 public enum UndoStyle {
@@ -18,7 +18,7 @@ public enum UndoStyle {
      * Shows a popup window, that allows the user to undo the last dismiss.
      * If another item is deleted, this will be added to the chain of undos. So pressing
      * undo will undo the last deletion, pressing it again will undo the deletion before that,
-     * and so on. As soon as the popup vanished (e.g. because {@link de.timroes.android.listview.EnhancedListView#setUndoHideDelay(int) autoHideDelay}
+     * and so on. As soon as the popup vanished (e.g. because {@link com.luciocossio.android.enhancedlist.EnhancedListView#setUndoHideDelay(int) autoHideDelay}
      * is over) all saved undos will be discarded.
      */
     MULTILEVEL_POPUP,
@@ -27,7 +27,7 @@ public enum UndoStyle {
      * Shows a popup window, that allows the user to undo the last dismisses.
      * If another item is deleted, while there is still an undo popup visible, the label
      * of the button changes to <i>Undo all</i> and a press on the button, will discard
-     * all stored undos. As soon as the popup vanished (e.g. because {@link de.timroes.android.listview.EnhancedListView#setUndoHideDelay(int) autoHideDelay}
+     * all stored undos. As soon as the popup vanished (e.g. because {@link com.luciocossio.android.enhancedlist.EnhancedListView#setUndoHideDelay(int) autoHideDelay}
      * is over) all saved undos will be discarded.
      */
     COLLAPSED_POPUP

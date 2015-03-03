@@ -1,9 +1,8 @@
-package de.timroes.android.listview;
+package com.luciocossio.android.enhancedlist;
 
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;

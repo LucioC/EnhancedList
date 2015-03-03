@@ -1,7 +1,7 @@
-package de.timroes.android.listview;
+package com.luciocossio.android.enhancedlist;
 
 /**
- * The callback interface used by {@link de.timroes.android.listview.EnhancedListView#setShouldSwipeCallback(OnShouldSwipeCallback)}
+ * The callback interface used by {@link com.luciocossio.android.enhancedlist.EnhancedListView#setShouldSwipeCallback(OnShouldSwipeCallback)}
  * to inform its client that a list item is going to be swiped and check whether is
  * should or not. Implement this to prevent some items from be swiped.
  */

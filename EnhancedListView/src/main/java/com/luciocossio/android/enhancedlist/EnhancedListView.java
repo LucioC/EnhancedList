@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.timroes.android.listview;
+package com.luciocossio.android.enhancedlist;
 
 import android.content.Context;
 import android.os.Build;
@@ -99,7 +99,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     }
 
     @Override
-    public void setOnScrollListener(final de.timroes.android.listview.OnScrollListener onScrollListener) {
+    public void setOnScrollListener(final com.luciocossio.android.enhancedlist.OnScrollListener onScrollListener) {
         this.setOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -234,16 +234,16 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     /**
      * Enables the <i>Swipe to Dismiss</i> feature for this list. This allows users to swipe out
      * an list item element to delete it from the list. Every time the user swipes out an element
-     * {@link de.timroes.android.listview.OnDismissCallback#onDismiss(EnhancedList, int)}
-     * of the given {@link de.timroes.android.listview.EnhancedListView} will be called. To enable
-     * <i>undo</i> of the deletion, return an {@link de.timroes.android.listview.Undoable}
-     * from {@link de.timroes.android.listview.OnDismissCallback#onDismiss(EnhancedList, int)}.
+     * {@link com.luciocossio.android.enhancedlist.OnDismissCallback#onDismiss(EnhancedList, int)}
+     * of the given {@link com.luciocossio.android.enhancedlist.EnhancedListView} will be called. To enable
+     * <i>undo</i> of the deletion, return an {@link com.luciocossio.android.enhancedlist.Undoable}
+     * from {@link com.luciocossio.android.enhancedlist.OnDismissCallback#onDismiss(EnhancedList, int)}.
      * Return {@code null}, if you don't want the <i>undo</i> feature enabled. Read the README file
      * or the demo project for more detailed samples.
      *
-     * @return The {@link de.timroes.android.listview.EnhancedListView}
-     * @throws java.lang.IllegalStateException when you haven't passed an {@link de.timroes.android.listview.OnDismissCallback}
-     *                                         to {@link de.timroes.android.listview.EnhancedListView#setDismissCallback(de.timroes.android.listview.OnDismissCallback)} before calling this
+     * @return The {@link com.luciocossio.android.enhancedlist.EnhancedListView}
+     * @throws java.lang.IllegalStateException when you haven't passed an {@link com.luciocossio.android.enhancedlist.OnDismissCallback}
+     *                                         to {@link com.luciocossio.android.enhancedlist.EnhancedListView#setDismissCallback(com.luciocossio.android.enhancedlist.OnDismissCallback)} before calling this
      *                                         method.
      */
     public EnhancedListView enableSwipeToDismiss() {
@@ -260,7 +260,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     /**
      * Disables the <i>Swipe to Dismiss</i> feature for this list.
      *
-     * @return This {@link de.timroes.android.listview.EnhancedListView}
+     * @return This {@link com.luciocossio.android.enhancedlist.EnhancedListView}
      */
     public EnhancedListView disableSwipeToDismiss() {
         swipeEnabled = false;
@@ -274,7 +274,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
      * {@link #enableSwipeToDismiss()} otherwise you will get an {@link java.lang.IllegalStateException}.
      *
      * @param dismissCallback The callback used to handle dismisses of list items.
-     * @return This {@link de.timroes.android.listview.EnhancedListView}
+     * @return This {@link com.luciocossio.android.enhancedlist.EnhancedListView}
      */
     public EnhancedListView setDismissCallback(OnDismissCallback dismissCallback) {
         this.dismissCallback = dismissCallback;
@@ -285,7 +285,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
      * Sets the callback to be called when the user is swiping an item from the list.
      *
      * @param shouldSwipeCallback The callback used to handle swipes of list items.
-     * @return This {@link de.timroes.android.listview.EnhancedListView}
+     * @return This {@link com.luciocossio.android.enhancedlist.EnhancedListView}
      */
     public EnhancedListView setShouldSwipeCallback(OnShouldSwipeCallback shouldSwipeCallback) {
         this.shouldSwipeCallback = shouldSwipeCallback;
@@ -293,12 +293,12 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     }
 
     /**
-     * Sets the undo style of this list. See the javadoc of {@link de.timroes.android.listview.UndoStyle}
+     * Sets the undo style of this list. See the javadoc of {@link com.luciocossio.android.enhancedlist.UndoStyle}
      * for a detailed explanation of the different styles. The default style (if you never call this
-     * method) is {@link de.timroes.android.listview.UndoStyle#SINGLE_POPUP}.
+     * method) is {@link com.luciocossio.android.enhancedlist.UndoStyle#SINGLE_POPUP}.
      *
      * @param undoStyle The style of this listview.
-     * @return This {@link de.timroes.android.listview.EnhancedListView}
+     * @return This {@link com.luciocossio.android.enhancedlist.EnhancedListView}
      */
     public EnhancedListView setUndoStyle(UndoStyle undoStyle) {
         this.undoStyle = undoStyle;
@@ -312,7 +312,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
      * {@code false}.
      *
      * @param hideDelay The delay in milliseconds.
-     * @return This {@link de.timroes.android.listview.EnhancedListView}
+     * @return This {@link com.luciocossio.android.enhancedlist.EnhancedListView}
      */
     public EnhancedListView setUndoHideDelay(int hideDelay) {
         undoHideDelay = hideDelay;
@@ -324,7 +324,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
      * the undo popup. By default this is set to {@code true}.
      *
      * @param touchBeforeDismiss Whether the screen needs to be touched before the countdown starts.
-     * @return This {@link de.timroes.android.listview.EnhancedListView}
+     * @return This {@link com.luciocossio.android.enhancedlist.EnhancedListView}
      * @see #setUndoHideDelay(int)
      */
     public EnhancedListView setRequireTouchBeforeDismiss(boolean touchBeforeDismiss) {
@@ -341,7 +341,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
      * {@link #enableSwipeToDismiss()} to enable the feature.
      *
      * @param direction The direction to which the swipe should be limited.
-     * @return This {@link de.timroes.android.listview.EnhancedListView}
+     * @return This {@link com.luciocossio.android.enhancedlist.EnhancedListView}
      */
     public EnhancedListView setSwipeDirection(SwipeDirection direction) {
         swipeDirection = direction;
@@ -360,7 +360,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
      * {@link #enableSwipeToDismiss()} to enable the feature.
      *
      * @param swipingLayoutId The id (from R.id) of the view, that should be swiped.
-     * @return This {@link de.timroes.android.listview.EnhancedListView}
+     * @return This {@link com.luciocossio.android.enhancedlist.EnhancedListView}
      */
     public EnhancedListView setSwipingLayout(int swipingLayoutId) {
         swipingLayout = swipingLayoutId;
@@ -370,7 +370,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     /**
      * Discard all stored undos and hide the undo popup dialog.
      * This method must be called in {@link android.app.Activity#onStop()}. Otherwise
-     * {@link de.timroes.android.listview.Undoable#discard()} might not be called for several items, what might
+     * {@link com.luciocossio.android.enhancedlist.Undoable#discard()} might not be called for several items, what might
      * break your data consistency.
      */
     public void discardUndo() {
@@ -389,8 +389,8 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
      *
      * @param position The position of the item in the list.
      * @throws java.lang.IndexOutOfBoundsException when trying to delete an item outside of the list range.
-     * @throws java.lang.IllegalStateException     when this method is called before an {@link de.timroes.android.listview.OnDismissCallback}
-     *                                             is set via {@link de.timroes.android.listview.EnhancedListView#setDismissCallback(de.timroes.android.listview.OnDismissCallback)}.
+     * @throws java.lang.IllegalStateException     when this method is called before an {@link com.luciocossio.android.enhancedlist.OnDismissCallback}
+     *                                             is set via {@link com.luciocossio.android.enhancedlist.EnhancedListView#setDismissCallback(com.luciocossio.android.enhancedlist.OnDismissCallback)}.
      */
     public void delete(int position) {
         enhancedListFlow.delete(position);
@@ -480,7 +480,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     /**
      * Checks whether the delta of a swipe indicates, that the swipe is in the
      * correct direction, regarding the direction set via
-     * {@link de.timroes.android.listview.EnhancedListView#setSwipeDirection(de.timroes.android.listview.SwipeDirection)}
+     * {@link com.luciocossio.android.enhancedlist.EnhancedListView#setSwipeDirection(com.luciocossio.android.enhancedlist.SwipeDirection)}
      *
      * @param deltaX The delta of x coordinate of the swipe.
      * @return Whether the delta of a swipe is in the right direction.

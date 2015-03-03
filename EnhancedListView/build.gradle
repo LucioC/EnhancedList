@@ -31,7 +31,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 version = android.defaultConfig.versionName
-group = "de.timroes.android"
+group = "com.luciocossio.android"
 
 if(project.hasProperty("EnhancedListView.properties") && new File(project.property("EnhancedListView.properties")).exists()) {
 
@@ -67,12 +67,12 @@ if(project.hasProperty("EnhancedListView.properties") && new File(project.proper
                 name 'EnhancedListView'
                 packaging 'aar'
                 description 'ListView with enhanced features for Android'
-                url 'https://github.com/timroes/EnhancedListView'
+                url 'https://github.com/LucioC/EnhancedListView.git'
 
                 scm {
-                    url 'scm:git@github.com:timroes/EnhancedListView.git'
-                    connection 'scm:git@github.com:timroes/EnhancedListView.git'
-                    developerConnection  'scm:git@github.com:timroes/EnhancedListView.git'
+                    url 'scm:git@github.com:LucioC/EnhancedListView.git'
+                    connection 'scm:git@github.com:LucioC/EnhancedListView.git'
+                    developerConnection  'scm:git@github.com:LucioC/EnhancedListView.git'
                 }
 
                 licenses {
@@ -85,9 +85,9 @@ if(project.hasProperty("EnhancedListView.properties") && new File(project.proper
 
                 developers {
                     developer {
-                        id 'timroes'
-                        name 'Tim Roes'
-                        email 'mail@timroes.de'
+                        id 'lucioc'
+                        name 'Lucio Cossio'
+                        email 'lucio.cossio@gmail.com'
                     }
                 }
 

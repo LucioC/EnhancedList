@@ -1,4 +1,4 @@
-package de.timroes.android.listview;
+package com.luciocossio.android.enhancedlist;
 
 import android.view.View;
 

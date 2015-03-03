@@ -1,12 +1,12 @@
-package de.timroes.android.listview;
+package com.luciocossio.android.enhancedlist;
 
 /**
  * Defines the direction in which list items can be swiped out to delete them.
- * Use {@link de.timroes.android.listview.EnhancedListView#setSwipeDirection(SwipeDirection)}
+ * Use {@link com.luciocossio.android.enhancedlist.EnhancedListView#setSwipeDirection(SwipeDirection)}
  * to change the default behavior.
  * <p>
  * <b>Note:</b> This method requires the <i>Swipe to Dismiss</i> feature enabled. Use
- * {@link de.timroes.android.listview.EnhancedListView#enableSwipeToDismiss()}
+ * {@link com.luciocossio.android.enhancedlist.EnhancedListView#enableSwipeToDismiss()}
  * to enable the feature.
  */
 public enum SwipeDirection {
