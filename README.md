@@ -21,7 +21,7 @@ Development TODO list
 - Update release process (how should this be released from now?)
 - Add automated tests
 
-Update Notice (From Forked project)
+(Old) Update Notice
 -------------
 
 ### v0.3.0
