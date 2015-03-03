@@ -456,10 +456,11 @@ public class EnhancedListFlow {
                             swipeDownView = swipingView;
                             swipeDownChild = child;
                         }
+                    } else {
+                        // If no swiping layout has been found, swipe the whole child
+                        swipeDownView = child;
+                        swipeDownChild = child;
                     }
-                    // If no swiping layout has been found, swipe the whole child
-                    swipeDownView = child;
-                    swipeDownChild = child;
                 }
 
                 if (swipeDownView != null) {
