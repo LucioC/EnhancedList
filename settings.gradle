@@ -1,1 +1,1 @@
-include ':EnhancedListView', ':EnhancedListViewDemo'
+include ':EnhancedListLib', ':EnhancedListDemo'
