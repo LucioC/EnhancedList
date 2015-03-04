@@ -23,12 +23,12 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.luciocossio.android.enhancedlist.touch.EnhancedListViewTouch;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewPropertyAnimator;
@@ -73,6 +73,8 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     private Handler hideUndoHandler = new HideUndoPopupHandler();
     private Button undoButton;
 
+    private EnhancedListViewTouch enhancedListViewTouch;
+
     @Override
     public void setUndoButton(Button undoButton) {
         this.undoButton = undoButton;
@@ -96,21 +98,6 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     @Override
     public void setScreenDensity(float screenDensity) {
         this.screenDensity = screenDensity;
-    }
-
-    @Override
-    public void setOnScrollListener(final com.luciocossio.android.enhancedlist.OnScrollListener onScrollListener) {
-        this.setOnScrollListener(new OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                onScrollListener.onScrollStateChanged(view, scrollState);
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
     }
 
     @Override
@@ -213,6 +200,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     public EnhancedListView(Context context) {
         super(context);
         enhancedListFlow.init(context, this);
+        enhancedListViewTouch = new EnhancedListViewTouch(this, enhancedListFlow.getTouchSetup());
     }
 
     /**
@@ -221,6 +209,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     public EnhancedListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         enhancedListFlow.init(context, this);
+        enhancedListViewTouch = new EnhancedListViewTouch(this, enhancedListFlow.getTouchSetup());
     }
 
     /**
@@ -229,6 +218,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     public EnhancedListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         enhancedListFlow.init(context, this);
+        enhancedListViewTouch = new EnhancedListViewTouch(this, enhancedListFlow.getTouchSetup());
     }
 
     /**
@@ -424,12 +414,10 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
         return getChildAt(position - getFirstVisiblePosition());
     }
 
-    @Override
     public boolean superOnTouchEvent(MotionEvent ev) {
         return super.onTouchEvent(ev);
     }
 
-    @Override
     public boolean isSwipeEnabled() {
         return swipeEnabled;
     }
@@ -444,24 +432,17 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
         hideUndoHandler.sendMessageDelayed(hideUndoHandler.obtainMessage(validDelayedMsgId), undoHideDelay);
     }
 
-    @Override
-    public int getPositionSwipeDownView(View swipeDownView) {
-        return getPositionForView(swipeDownView) - getHeaderViewsCount();
-    }
-
-    @Override
     public boolean hasSwipeCallback() {
         return shouldSwipeCallback != null;
     }
 
-    @Override
     public boolean onShouldSwipe(int position) {
         return shouldSwipeCallback.onShouldSwipe(this, position);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        return enhancedListFlow.onTouchEvent(ev);
+        return enhancedListViewTouch.onTouchEvent(ev);
     }
 
     /**
@@ -564,7 +545,6 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
         }
     }
 
-    @Override
     public void animateSwipeBack(View swipeDownView, int animationTime) {
         //Swipe back to regular position
         com.nineoldandroids.view.ViewPropertyAnimator.animate(swipeDownView)

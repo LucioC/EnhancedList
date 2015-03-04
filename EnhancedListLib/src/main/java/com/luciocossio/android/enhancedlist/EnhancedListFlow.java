@@ -1,20 +1,16 @@
 package com.luciocossio.android.enhancedlist;
 
 import android.content.Context;
-import android.graphics.Rect;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.luciocossio.android.enhancedlist.touch.TouchSetup;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -29,8 +25,6 @@ public class EnhancedListFlow {
     private int minFlingVelocity;
     private int maxFlingVelocity;
     private int animationTime;
-    private int viewWidth = 1; // 1 and not 0 to prevent dividing by zero
-    private boolean swipePaused;
 
     public void init(Context ctx, final EnhancedListControl enhancedList) {
         this.context = ctx;
@@ -74,22 +68,8 @@ public class EnhancedListFlow {
 
         enhancedList.setScreenDensity(ctx.getResources().getDisplayMetrics().density);
 
-        enhancedList.setOnScrollListener(makeScrollListener(enhancedList));
     }
 
-    private OnScrollListener makeScrollListener(final EnhancedListControl enhancedList) {
-        return new OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(View view, int scrollState) {
-                if (view instanceof AbsListView) {
-                    swipePaused = (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
-                }
-                if (view instanceof RecyclerView) {
-                    swipePaused = (scrollState == RecyclerView.SCROLL_STATE_DRAGGING);
-                }
-            }
-        };
-    }
 
     /**
      * Changes the text of the undo popup. If more then one item can be undone, the number of deleted
@@ -180,170 +160,8 @@ public class EnhancedListFlow {
      */
     public void slideOutView(final View view, final View childView, final int position, boolean toRightSide) {
         if (enhancedList.shouldPrepareAnimation(view)) {
-            enhancedList.animateSlideOut(view, viewWidth, animationTime, toRightSide, childView, position);
+            enhancedList.animateSlideOut(view, enhancedList.getWidth(), animationTime, toRightSide, childView, position);
         }
-    }
-
-    private float downX;
-    private int downPosition;
-    private boolean swiping;
-    private VelocityTracker velocityTracker;
-    private View swipeDownView;
-    private View swipeDownChild;
-
-    public boolean onTouchEvent(MotionEvent ev) {
-
-        if (!enhancedList.isSwipeEnabled()) {
-            return enhancedList.superOnTouchEvent(ev);
-        }
-
-        // Send a delayed message to hide popup
-        if (enhancedList.getTouchBeforeAutoHide() && enhancedList.isUndoPopupShowing()) {
-            enhancedList.hidePopupMessageDelayed();
-        }
-
-        // Store width of this list for usage of swipe distance detection
-        if (viewWidth < 2) {
-            viewWidth = enhancedList.getWidth();
-        }
-
-        switch (ev.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN: {
-                if (swipePaused) {
-                    return enhancedList.superOnTouchEvent(ev);
-                }
-
-                // TODO: ensure this is a finger, and set a flag
-
-                // Find the child view that was touched (perform a hit test)
-                Rect rect = new Rect();
-                int childCount = enhancedList.getChildCount();
-                int[] listViewCoords = new int[2];
-                enhancedList.getLocationOnScreen(listViewCoords);
-                int x = (int) ev.getRawX() - listViewCoords[0];
-                int y = (int) ev.getRawY() - listViewCoords[1];
-                View child;
-                for (int i = enhancedList.getHeaderViewsCount(); i < childCount; i++) {
-                    child = enhancedList.getChildAt(i);
-                    if (child != null) {
-                        child.getHitRect(rect);
-                        if (rect.contains(x, y)) {
-                            // if a specific swiping layout has been giving, use this to swipe.
-                            if (enhancedList.hasSwipingLayout()) {
-                                View swipingView = child.findViewById(enhancedList.getSwipingLayout());
-                                if (swipingView != null) {
-                                    swipeDownView = swipingView;
-                                    swipeDownChild = child;
-                                    break;
-                                }
-                            }
-                            // If no swiping layout has been found, swipe the whole child
-                            swipeDownView = child;
-                            swipeDownChild = child;
-                            break;
-                        }
-                    }
-                }
-
-                if (swipeDownView != null) {
-                    // test if the item should be swiped
-                    int position = enhancedList.getPositionSwipeDownView(swipeDownChild);
-                    if ((!enhancedList.hasSwipeCallback()) ||
-                            enhancedList.onShouldSwipe(position)) {
-                        downX = ev.getRawX();
-                        downPosition = position;
-                        velocityTracker = VelocityTracker.obtain();
-                        velocityTracker.addMovement(ev);
-                    } else {
-                        // set back to null to revert swiping
-                        swipeDownView = null;
-                        swipeDownChild = null;
-                    }
-                }
-                enhancedList.superOnTouchEvent(ev);
-                return true;
-            }
-
-            case MotionEvent.ACTION_UP: {
-                if (velocityTracker == null) {
-                    break;
-                }
-
-                float deltaX = ev.getRawX() - downX;
-                velocityTracker.addMovement(ev);
-                velocityTracker.computeCurrentVelocity(1000);
-                float velocityX = Math.abs(velocityTracker.getXVelocity());
-                float velocityY = Math.abs(velocityTracker.getYVelocity());
-                boolean dismiss = false;
-                boolean dismissRight = false;
-                if (Math.abs(deltaX) > viewWidth / 2 && swiping) {
-                    dismiss = true;
-                    dismissRight = deltaX > 0;
-                } else if (minFlingVelocity <= velocityX && velocityX <= maxFlingVelocity
-                        && velocityY < velocityX && swiping && enhancedList.isSwipeDirectionValid(velocityTracker.getXVelocity())
-                        && deltaX >= viewWidth * 0.2f) {
-                    dismiss = true;
-                    dismissRight = velocityTracker.getXVelocity() > 0;
-                }
-                if (dismiss) {
-                    // dismiss
-                    enhancedList.slideOutView(swipeDownView, swipeDownChild, downPosition, dismissRight);
-                } else if (swiping) {
-                    enhancedList.animateSwipeBack(swipeDownView, animationTime);
-                }
-                velocityTracker = null;
-                downX = 0;
-                swipeDownView = null;
-                swipeDownChild = null;
-                downPosition = AbsListView.INVALID_POSITION;
-                swiping = false;
-                break;
-            }
-
-            case MotionEvent.ACTION_MOVE: {
-
-                if (velocityTracker == null || swipePaused) {
-                    break;
-                }
-
-                velocityTracker.addMovement(ev);
-                float deltaX = ev.getRawX() - downX;
-                // Only start swipe in correct direction
-                if (enhancedList.isSwipeDirectionValid(deltaX)) {
-                    ViewParent parent = enhancedList.getParent();
-                    if (parent != null) {
-                        // If we swipe don't allow parent to intercept touch (e.g. like NavigationDrawer does)
-                        // otherwise swipe would not be working.
-                        parent.requestDisallowInterceptTouchEvent(true);
-                    }
-                    if (Math.abs(deltaX) > slop) {
-                        swiping = true;
-                        enhancedList.requestDisallowInterceptTouchEvent(true);
-
-                        // Cancel ListView's touch (un-highlighting the item)
-                        MotionEvent cancelEvent = MotionEvent.obtain(ev);
-                        cancelEvent.setAction(MotionEvent.ACTION_CANCEL
-                                | (ev.getActionIndex()
-                                << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
-                        enhancedList.superOnTouchEvent(cancelEvent);
-                    }
-                } else {
-                    // If we swiped into wrong direction, act like this was the new
-                    // touch down point
-                    downX = ev.getRawX();
-                    deltaX = 0;
-                }
-
-                if (swiping) {
-                    ViewHelper.setTranslationX(swipeDownView, deltaX);
-                    ViewHelper.setAlpha(swipeDownView, Math.max(0f, Math.min(1f,
-                            1f - 2f * Math.abs(deltaX) / viewWidth)));
-                    return true;
-                }
-                break;
-            }
-        }
-        return enhancedList.superOnTouchEvent(ev);
     }
 
     /**
@@ -425,139 +243,8 @@ public class EnhancedListFlow {
         animator.start();
     }
 
-    public boolean onTouchEventNew(MotionEvent ev, EnhancedRecyclerListView enhancedList) {
 
-        if (!enhancedList.isSwipeEnabled()) {
-            return false;
-        }
-
-        // Send a delayed message to hide popup
-        if (enhancedList.getTouchBeforeAutoHide() && enhancedList.isUndoPopupShowing()) {
-            enhancedList.hidePopupMessageDelayed();
-        }
-
-        // Store width of this list for usage of swipe distance detection
-        if (viewWidth < 2) {
-            viewWidth = enhancedList.getWidth();
-        }
-
-        switch (ev.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN: {
-                if (swipePaused) {
-                    return false;
-                }
-
-                View child = enhancedList.findChildViewUnder(ev.getX(), ev.getY());
-                if (child != null) {
-                    // if a specific swiping layout has been giving, use this to swipe.
-                    if (enhancedList.hasSwipingLayout()) {
-                        View swipingView = child.findViewById(enhancedList.getSwipingLayout());
-                        if (swipingView != null) {
-                            swipeDownView = swipingView;
-                            swipeDownChild = child;
-                        }
-                    } else {
-                        // If no swiping layout has been found, swipe the whole child
-                        swipeDownView = child;
-                        swipeDownChild = child;
-                    }
-                }
-
-                if (swipeDownView != null) {
-                    // test if the item should be swiped
-                    int position = enhancedList.getPositionSwipeDownView(swipeDownChild);
-                    if ((!enhancedList.hasSwipeCallback()) ||
-                            enhancedList.onShouldSwipe(position)) {
-                        downX = ev.getRawX();
-                        downPosition = position;
-                        velocityTracker = VelocityTracker.obtain();
-                        velocityTracker.addMovement(ev);
-                    } else {
-                        // set back to null to revert swiping
-                        swipeDownView = null;
-                        swipeDownChild = null;
-                    }
-                }
-                break;
-            }
-
-            case MotionEvent.ACTION_UP: {
-                if (velocityTracker == null) {
-                    break;
-                }
-
-                float deltaX = ev.getRawX() - downX;
-                velocityTracker.addMovement(ev);
-                velocityTracker.computeCurrentVelocity(1000);
-                float velocityX = Math.abs(velocityTracker.getXVelocity());
-                float velocityY = Math.abs(velocityTracker.getYVelocity());
-                boolean dismiss = false;
-                boolean dismissRight = false;
-                if (Math.abs(deltaX) > viewWidth / 2 && swiping) {
-                    dismiss = true;
-                    dismissRight = deltaX > 0;
-                } else if (minFlingVelocity <= velocityX && velocityX <= maxFlingVelocity
-                        && velocityY < velocityX && swiping && enhancedList.isSwipeDirectionValid(velocityTracker.getXVelocity())
-                        && deltaX >= viewWidth * 0.2f) {
-                    dismiss = true;
-                    dismissRight = velocityTracker.getXVelocity() > 0;
-                }
-                if (dismiss) {
-                    // dismiss
-                    enhancedList.slideOutView(swipeDownView, swipeDownChild, downPosition, dismissRight);
-                } else if (swiping) {
-                    enhancedList.animateSwipeBack(swipeDownView, animationTime);
-                }
-                velocityTracker = null;
-                downX = 0;
-                swipeDownView = null;
-                swipeDownChild = null;
-                downPosition = AbsListView.INVALID_POSITION;
-                swiping = false;
-                break;
-            }
-
-            case MotionEvent.ACTION_MOVE: {
-
-                if (velocityTracker == null || swipePaused) {
-                    break;
-                }
-
-                velocityTracker.addMovement(ev);
-                float deltaX = ev.getRawX() - downX;
-                // Only start swipe in correct direction
-                if (enhancedList.isSwipeDirectionValid(deltaX)) {
-                    ViewParent parent = enhancedList.getParent();
-                    if (parent != null) {
-                        // If we swipe don't allow parent to intercept touch (e.g. like NavigationDrawer does)
-                        // otherwise swipe would not be working.
-                        parent.requestDisallowInterceptTouchEvent(true);
-                    }
-                    if (Math.abs(deltaX) > slop) {
-                        swiping = true;
-
-//                        // Cancel child view touch
-                        MotionEvent cancelEvent = MotionEvent.obtain(ev);
-                        cancelEvent.setAction(MotionEvent.ACTION_CANCEL
-                                | (ev.getActionIndex()
-                                << MotionEvent.ACTION_POINTER_INDEX_SHIFT));
-                        swipeDownChild.dispatchTouchEvent(cancelEvent);
-                    }
-                } else {
-                    // If we swiped into wrong direction, act like this was the new
-                    // touch down point
-                    downX = ev.getRawX();
-                    deltaX = 0;
-                }
-
-                if (swiping) {
-                    ViewHelper.setTranslationX(swipeDownView, deltaX);
-                    ViewHelper.setAlpha(swipeDownView, Math.max(0f, Math.min(1f,
-                            1f - 2f * Math.abs(deltaX) / viewWidth)));
-                }
-            }
-        }
-
-        return false;
+    public TouchSetup getTouchSetup() {
+        return new TouchSetup(slop, minFlingVelocity, maxFlingVelocity, animationTime);
     }
 }

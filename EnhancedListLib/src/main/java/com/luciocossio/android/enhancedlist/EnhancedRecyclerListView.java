@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.luciocossio.android.enhancedlist.touch.EnhancedRecyclerViewTouch;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewPropertyAnimator;
@@ -51,6 +52,7 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
     private int validDelayedMsgId;
     private Handler hideUndoHandler = new HideUndoPopupHandler();
     private Button undoButton;
+    private EnhancedRecyclerViewTouch enhancedRecyclerViewTouch;
 
     public EnhancedRecyclerListView(Context context) {
         super(context);
@@ -80,6 +82,7 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
         this.setLayoutManager(linearLayoutManager);
         this.setItemAnimator(null);
         this.addOnItemTouchListener(new EnhancedRecyclerListTouchListener(context, this));
+        this.enhancedRecyclerViewTouch = new EnhancedRecyclerViewTouch(this, enhancedListFlow.getTouchSetup());
     }
 
     @Override
@@ -105,16 +108,6 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
     @Override
     public void setScreenDensity(float density) {
         this.screenDensity = density;
-    }
-
-    @Override
-    public void setOnScrollListener(final com.luciocossio.android.enhancedlist.OnScrollListener onScrollListener) {
-        this.setOnScrollListener(new OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                onScrollListener.onScrollStateChanged(recyclerView, newState);
-            }
-        });
     }
 
     @Override
@@ -232,20 +225,14 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
     }
 
     @Override
-    public boolean superOnTouchEvent(MotionEvent ev) {
-        return super.onTouchEvent(ev);
-    }
-
-    @Override
     public boolean onTouchEvent(MotionEvent ev) {
         return super.onTouchEvent(ev);
     }
 
     public boolean onTouchEventCustom(MotionEvent ev) {
-        return enhancedListFlow.onTouchEventNew(ev, this);
+        return enhancedRecyclerViewTouch.onTouchEventNew(ev);
     }
 
-    @Override
     public boolean isSwipeEnabled() {
         return swipeEnabled;
     }
@@ -260,27 +247,18 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
         hideUndoHandler.sendMessageDelayed(hideUndoHandler.obtainMessage(validDelayedMsgId), undoHideDelay);
     }
 
-    @Override
-    public int getHeaderViewsCount() {
-        return 0;
-    }
-
-    @Override
     public int getPositionSwipeDownView(View swipeDownView) {
         return getChildPosition(swipeDownView);
     }
 
-    @Override
     public boolean hasSwipeCallback() {
         return shouldSwipeCallback != null;
     }
 
-    @Override
     public boolean onShouldSwipe(int position) {
         return shouldSwipeCallback.onShouldSwipe(this, position);
     }
 
-    @Override
     public boolean isSwipeDirectionValid(float xVelocity) {
 
         int rtlSign = 1;
@@ -360,7 +338,6 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
         }
     }
 
-    @Override
     public void animateSwipeBack(View swipeDownView, int animationTime) {
         //Swipe back to regular position
         ViewPropertyAnimator.animate(swipeDownView)
