@@ -15,10 +15,13 @@ android {
 
 repositories {
     mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/groups/public' }
+    maven { url 'https://oss.sonatype.org/content/groups/staging' }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.0.+'
-    compile 'com.android.support:appcompat-v7:19.0.+'
+    compile 'com.android.support:support-v4:19.0.3'
+    compile 'com.android.support:appcompat-v7:20.0.0'
     compile project(':EnhancedListLib')
+    //compile 'com.luciocossio.android:EnhancedList:0.0.1'
 }
