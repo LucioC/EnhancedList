@@ -18,7 +18,6 @@ Development TODO list
 ------------------
 
 - Review RecyclerView use. Is it being used correctly? Using it's full potential?
-- Update release process (how should this be released from now?)
 - Add automated tests
 
 ## License
