@@ -11,7 +11,7 @@ import com.luciocossio.android.enhancedlist.EnhancedListView;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
-public class EnhancedListViewTouch {
+public class EnhancedListViewOnTouch {
 
     private float downX;
     private int downPosition;
@@ -28,7 +28,7 @@ public class EnhancedListViewTouch {
     EnhancedListView enhancedListView;
     private boolean swipePaused;
 
-    public EnhancedListViewTouch(EnhancedListView enhancedListView, TouchSetup touchSetup) {
+    public EnhancedListViewOnTouch(EnhancedListView enhancedListView, TouchSetup touchSetup) {
         this.enhancedListView = enhancedListView;
         this.slop = touchSetup.getSlop();
         this.minFlingVelocity = touchSetup.getMinFlingVelocity();
@@ -38,7 +38,7 @@ public class EnhancedListViewTouch {
         enhancedListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                EnhancedListViewTouch.this.onScrollStateChanged(view, scrollState);
+                EnhancedListViewOnTouch.this.onScrollStateChanged(view, scrollState);
             }
 
             @Override

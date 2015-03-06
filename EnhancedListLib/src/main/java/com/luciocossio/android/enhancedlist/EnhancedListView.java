@@ -28,7 +28,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.luciocossio.android.enhancedlist.touch.EnhancedListViewTouch;
+import com.luciocossio.android.enhancedlist.touch.EnhancedListViewOnTouch;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewPropertyAnimator;
@@ -73,7 +73,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     private Handler hideUndoHandler = new HideUndoPopupHandler();
     private Button undoButton;
 
-    private EnhancedListViewTouch enhancedListViewTouch;
+    private EnhancedListViewOnTouch enhancedListViewOnTouch;
 
     @Override
     public void setUndoButton(Button undoButton) {
@@ -200,7 +200,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     public EnhancedListView(Context context) {
         super(context);
         enhancedListFlow.init(context, this);
-        enhancedListViewTouch = new EnhancedListViewTouch(this, enhancedListFlow.getTouchSetup());
+        enhancedListViewOnTouch = new EnhancedListViewOnTouch(this, enhancedListFlow.getTouchSetup());
     }
 
     /**
@@ -209,7 +209,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     public EnhancedListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         enhancedListFlow.init(context, this);
-        enhancedListViewTouch = new EnhancedListViewTouch(this, enhancedListFlow.getTouchSetup());
+        enhancedListViewOnTouch = new EnhancedListViewOnTouch(this, enhancedListFlow.getTouchSetup());
     }
 
     /**
@@ -218,7 +218,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
     public EnhancedListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         enhancedListFlow.init(context, this);
-        enhancedListViewTouch = new EnhancedListViewTouch(this, enhancedListFlow.getTouchSetup());
+        enhancedListViewOnTouch = new EnhancedListViewOnTouch(this, enhancedListFlow.getTouchSetup());
     }
 
     /**
@@ -442,7 +442,7 @@ public class EnhancedListView extends ListView implements EnhancedListControl {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        return enhancedListViewTouch.onTouchEvent(ev);
+        return enhancedListViewOnTouch.onTouchEvent(ev);
     }
 
     /**

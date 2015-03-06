@@ -36,7 +36,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.luciocossio.android.enhancedlist.EnhancedList;
-import com.luciocossio.android.enhancedlist.EnhancedListAdapter;
 import com.luciocossio.android.enhancedlist.EnhancedListView;
 import com.luciocossio.android.enhancedlist.EnhancedRecyclerListView;
 import com.luciocossio.android.enhancedlist.SwipeDirection;
@@ -57,13 +56,13 @@ public class MainActivityRecycler extends ActionBarActivity {
     private static final String PREF_SWIPE_DIRECTION = "SWIPE_DIRECTION";
     private static final String PREF_SWIPE_LAYOUT = "SWIPE_LAYOUT";
 
-    private EnhancedRecyclerAdapter mAdapter;
+    private EnhancedRecyclerAdapter adapter;
 
-    private EnhancedRecyclerListView mListView;
-    private DrawerLayout mDrawerLayout;
+    private EnhancedRecyclerListView listView;
+    private DrawerLayout drawerLayout;
 
-    private Bundle mUndoStylePref;
-    private Bundle mSwipeDirectionPref;
+    private Bundle undoStylePref;
+    private Bundle swipeDirectionPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,15 +70,15 @@ public class MainActivityRecycler extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_recycler);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View view, float v) {
             }
 
             @Override
             public void onDrawerOpened(View view) {
-                mListView.discardUndo();
+                listView.discardUndo();
                 supportInvalidateOptionsMenu();
             }
 
@@ -95,12 +94,12 @@ public class MainActivityRecycler extends ActionBarActivity {
 
         });
 
-        mListView = (EnhancedRecyclerListView) findViewById(R.id.list);
+        listView = (EnhancedRecyclerListView) findViewById(R.id.list);
 
-        mAdapter = new EnhancedRecyclerAdapter();
-        mAdapter.resetItems();
+        adapter = new EnhancedRecyclerAdapter();
+        adapter.resetItems();
 
-        mListView.setAdapter(mAdapter);
+        listView.setAdapter(adapter);
 
         CheckBox swipeToDismiss = (CheckBox) findViewById(R.id.pref_swipetodismiss);
         swipeToDismiss.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -121,20 +120,20 @@ public class MainActivityRecycler extends ActionBarActivity {
         });
         swipeLayout.setChecked(getPreferences(MODE_PRIVATE).getBoolean(PREF_SWIPE_LAYOUT, false));
 
-        mUndoStylePref = new Bundle();
-        mUndoStylePref.putInt(DialogPicker.DIALOG_TITLE, R.string.pref_undo_style_title);
-        mUndoStylePref.putInt(DialogPicker.DIALOG_ITEMS_ID, R.array.undo_style);
-        mUndoStylePref.putString(DialogPicker.DIALOG_PREF_KEY, PREF_UNDO_STYLE);
+        undoStylePref = new Bundle();
+        undoStylePref.putInt(DialogPicker.DIALOG_TITLE, R.string.pref_undo_style_title);
+        undoStylePref.putInt(DialogPicker.DIALOG_ITEMS_ID, R.array.undo_style);
+        undoStylePref.putString(DialogPicker.DIALOG_PREF_KEY, PREF_UNDO_STYLE);
 
-        mSwipeDirectionPref = new Bundle();
-        mSwipeDirectionPref.putInt(DialogPicker.DIALOG_TITLE, R.string.pref_swipe_direction_title);
-        mSwipeDirectionPref.putInt(DialogPicker.DIALOG_ITEMS_ID, R.array.swipe_direction);
-        mSwipeDirectionPref.putString(DialogPicker.DIALOG_PREF_KEY, PREF_SWIPE_DIRECTION);
+        swipeDirectionPref = new Bundle();
+        swipeDirectionPref.putInt(DialogPicker.DIALOG_TITLE, R.string.pref_swipe_direction_title);
+        swipeDirectionPref.putInt(DialogPicker.DIALOG_ITEMS_ID, R.array.swipe_direction);
+        swipeDirectionPref.putString(DialogPicker.DIALOG_PREF_KEY, PREF_SWIPE_DIRECTION);
 
         enableControlGroup(ControlGroup.SWIPE_TO_DISMISS, getPreferences(MODE_PRIVATE).getBoolean(PREF_SWIPE_TO_DISMISS, false));
 
         // Set the callback that handles dismisses.
-        mListView.setDismissCallback(new com.luciocossio.android.enhancedlist.OnDismissCallback() {
+        listView.setDismissCallback(new com.luciocossio.android.enhancedlist.OnDismissCallback() {
             /**
              * This method will be called when the user swiped a way or deleted it via
              * {@link com.luciocossio.android.enhancedlist.EnhancedListView#delete(int)}.
@@ -147,18 +146,23 @@ public class MainActivityRecycler extends ActionBarActivity {
             @Override
             public Undoable onDismiss(EnhancedList listView, final int position) {
 
-                final String item = (String) mAdapter.getItem(position);
-                mAdapter.remove(position);
+                final String item = (String) adapter.getItem(position);
+                adapter.remove(position);
                 return new Undoable() {
                     @Override
                     public void undo() {
-                        mAdapter.insert(position, item);
+                        adapter.insert(position, item);
+                    }
+
+                    @Override
+                    public void discard() {
+                        //delete item permanently
                     }
                 };
             }
         });
 
-        mListView.setSwipingLayout(R.id.swiping_layout);
+        listView.setSwipingLayout(R.id.swiping_layout);
 
         applySettings();
 
@@ -199,11 +203,11 @@ public class MainActivityRecycler extends ActionBarActivity {
                 style = UndoStyle.COLLAPSED_POPUP;
                 break;
         }
-        mListView.setUndoStyle(style);
+        listView.setUndoStyle(style);
 
         // Enable or disable Swipe to Dismiss
         if (prefs.getBoolean(PREF_SWIPE_TO_DISMISS, false)) {
-            mListView.enableSwipeToDismiss();
+            listView.enableSwipeToDismiss();
 
             // Set the swipe direction
             SwipeDirection direction;
@@ -218,22 +222,22 @@ public class MainActivityRecycler extends ActionBarActivity {
                     direction = SwipeDirection.END;
                     break;
             }
-            mListView.setSwipeDirection(direction);
+            listView.setSwipeDirection(direction);
 
             // Enable or disable swiping layout feature
-            mListView.setSwipingLayout(prefs.getBoolean(PREF_SWIPE_LAYOUT, false)
+            listView.setSwipingLayout(prefs.getBoolean(PREF_SWIPE_LAYOUT, false)
                     ? R.id.swiping_layout : 0);
 
         } else {
-            mListView.disableSwipeToDismiss();
+            listView.disableSwipeToDismiss();
         }
 
     }
 
     @Override
     protected void onStop() {
-        if (mListView != null) {
-            mListView.discardUndo();
+        if (listView != null) {
+            listView.discardUndo();
         }
         super.onStop();
     }
@@ -248,7 +252,7 @@ public class MainActivityRecycler extends ActionBarActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
-        boolean drawer = mDrawerLayout.isDrawerVisible(Gravity.RIGHT);
+        boolean drawer = drawerLayout.isDrawerVisible(Gravity.RIGHT);
 
         menu.findItem(R.id.action_settings).setVisible(!drawer);
         menu.findItem(R.id.action_done).setVisible(drawer);
@@ -261,34 +265,34 @@ public class MainActivityRecycler extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                mDrawerLayout.openDrawer(Gravity.RIGHT);
+                drawerLayout.openDrawer(Gravity.RIGHT);
                 return true;
             case R.id.action_done:
-                mDrawerLayout.closeDrawers();
+                drawerLayout.closeDrawers();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void resetItems(View view) {
-        mListView.discardUndo();
-        mAdapter.resetItems();
-        mDrawerLayout.closeDrawers();
+        listView.discardUndo();
+        adapter.resetItems();
+        drawerLayout.closeDrawers();
     }
 
     public void selectUndoStyle(View view) {
         DialogPicker picker = new DialogPicker();
-        picker.setArguments(mUndoStylePref);
+        picker.setArguments(undoStylePref);
         picker.show(getSupportFragmentManager(), "UNDO_STYLE_PICKER");
     }
 
     public void selectSwipeDirection(View view) {
         DialogPicker picker = new DialogPicker();
-        picker.setArguments(mSwipeDirectionPref);
+        picker.setArguments(swipeDirectionPref);
         picker.show(getSupportFragmentManager(), "SWIPE_DIR_PICKER");
     }
 
-    private class EnhancedRecyclerAdapter extends EnhancedListAdapter<EnhancedRecyclerAdapter.ViewHolder> {
+    private class EnhancedRecyclerAdapter extends RecyclerView.Adapter<EnhancedRecyclerAdapter.ViewHolder> {
 
         private List<String> mItems = new ArrayList<String>();
 
@@ -328,21 +332,21 @@ public class MainActivityRecycler extends ActionBarActivity {
             holder.itemView.findViewById(R.id.action_delete).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListView.delete(holder.itemView);
+                    listView.delete(holder.itemView);
                 }
             });
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(MainActivityRecycler.this, "Clicked on item " + mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivityRecycler.this, "Clicked on item " + adapter.getItem(position), Toast.LENGTH_SHORT).show();
                 }
             });
 
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Toast.makeText(MainActivityRecycler.this, "Long clicked on item " + mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivityRecycler.this, "Long clicked on item " + adapter.getItem(position), Toast.LENGTH_SHORT).show();
                     return true;
                 }
             });

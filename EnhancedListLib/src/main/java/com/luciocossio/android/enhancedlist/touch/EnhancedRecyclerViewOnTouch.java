@@ -10,7 +10,7 @@ import android.widget.AbsListView;
 import com.luciocossio.android.enhancedlist.EnhancedRecyclerListView;
 import com.nineoldandroids.view.ViewHelper;
 
-public class EnhancedRecyclerViewTouch {
+public class EnhancedRecyclerViewOnTouch {
 
     private float downX;
     private int downPosition;
@@ -27,7 +27,7 @@ public class EnhancedRecyclerViewTouch {
     private EnhancedRecyclerListView enhancedRecyclerListView;
     private boolean swipePaused;
 
-    public EnhancedRecyclerViewTouch(EnhancedRecyclerListView enhancedRecyclerListView, TouchSetup touchSetup) {
+    public EnhancedRecyclerViewOnTouch(EnhancedRecyclerListView enhancedRecyclerListView, TouchSetup touchSetup) {
         this.enhancedRecyclerListView = enhancedRecyclerListView;
         this.slop = touchSetup.getSlop();
         this.minFlingVelocity = touchSetup.getMinFlingVelocity();
@@ -37,7 +37,7 @@ public class EnhancedRecyclerViewTouch {
         enhancedRecyclerListView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView view, int scrollState) {
-                EnhancedRecyclerViewTouch.this.onScrollStateChanged(view, scrollState);
+                EnhancedRecyclerViewOnTouch.this.onScrollStateChanged(view, scrollState);
             }
 
             @Override

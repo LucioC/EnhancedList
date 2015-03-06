@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.luciocossio.android.enhancedlist.touch.EnhancedRecyclerViewTouch;
+import com.luciocossio.android.enhancedlist.touch.EnhancedRecyclerViewOnTouch;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.view.ViewPropertyAnimator;
@@ -52,7 +52,7 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
     private int validDelayedMsgId;
     private Handler hideUndoHandler = new HideUndoPopupHandler();
     private Button undoButton;
-    private EnhancedRecyclerViewTouch enhancedRecyclerViewTouch;
+    private EnhancedRecyclerViewOnTouch enhancedRecyclerViewOnTouch;
 
     public EnhancedRecyclerListView(Context context) {
         super(context);
@@ -82,7 +82,7 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
         this.setLayoutManager(linearLayoutManager);
         this.setItemAnimator(null);
         this.addOnItemTouchListener(new EnhancedRecyclerListTouchListener(context, this));
-        this.enhancedRecyclerViewTouch = new EnhancedRecyclerViewTouch(this, enhancedListFlow.getTouchSetup());
+        this.enhancedRecyclerViewOnTouch = new EnhancedRecyclerViewOnTouch(this, enhancedListFlow.getTouchSetup());
     }
 
     @Override
@@ -230,7 +230,7 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
     }
 
     public boolean onTouchEventCustom(MotionEvent ev) {
-        return enhancedRecyclerViewTouch.onTouchEventNew(ev);
+        return enhancedRecyclerViewOnTouch.onTouchEventNew(ev);
     }
 
     public boolean isSwipeEnabled() {
