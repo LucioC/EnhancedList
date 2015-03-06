@@ -21,12 +21,22 @@ Development TODO list
 - Update release process (how should this be released from now?)
 - Add automated tests
 
-(Old) Update Notice
--------------
+## License
 
-### v0.3.0
+This project is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html). If you commit to this project (e.g. by sending Pull Requests) you agree to publish your code under the same license.
 
-* All resources (layouts, colors, etc.) got an `elv_` prefix. So if you have changed 
-  some of these in your own app, you must make sure to also add the `elv_` prefix to your
-  resources (e.g. to change or internationalize the "Undo" string, you will need to have a
-  string resource `elv_undo` instead of `undo`).
+```text
+Copyright 2015 Lucio Cossio
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
