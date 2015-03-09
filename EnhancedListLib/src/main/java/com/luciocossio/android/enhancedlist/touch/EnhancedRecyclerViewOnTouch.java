@@ -50,7 +50,7 @@ public class EnhancedRecyclerViewOnTouch {
         swipePaused = (scrollState == RecyclerView.SCROLL_STATE_DRAGGING);
     }
 
-    public boolean onTouchEventNew(MotionEvent ev) {
+    public boolean onTouchEvent(MotionEvent ev) {
 
         if (!enhancedRecyclerListView.isSwipeEnabled()) {
             return false;
@@ -179,6 +179,8 @@ public class EnhancedRecyclerViewOnTouch {
                     ViewHelper.setTranslationX(swipeDownView, deltaX);
                     ViewHelper.setAlpha(swipeDownView, Math.max(0f, Math.min(1f,
                             1f - 2f * Math.abs(deltaX) / viewWidth)));
+                    //Continue to listen to swiping
+                    return true;
                 }
             }
         }

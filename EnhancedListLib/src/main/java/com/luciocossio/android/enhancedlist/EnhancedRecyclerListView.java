@@ -230,7 +230,7 @@ public class EnhancedRecyclerListView extends RecyclerView implements EnhancedLi
     }
 
     public boolean onTouchEventCustom(MotionEvent ev) {
-        return enhancedRecyclerViewOnTouch.onTouchEventNew(ev);
+        return enhancedRecyclerViewOnTouch.onTouchEvent(ev);
     }
 
     public boolean isSwipeEnabled() {

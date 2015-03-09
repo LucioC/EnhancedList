@@ -13,10 +13,13 @@ public class EnhancedRecyclerListTouchListener implements RecyclerView.OnItemTou
 
     @Override
     public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
+        //When it returns true, subsequent events will go to onTouchEvent
         return recyclerView.onTouchEventCustom(e);
     }
 
     @Override
     public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {
+        //If returned true from intercept method, continue to handle it here
+        recyclerView.onTouchEventCustom(motionEvent);
     }
 }
