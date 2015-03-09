@@ -8,7 +8,7 @@ An Android List with enhanced functionality (e.g. Swipe To Dismiss and Undo)
 Include It
 ------------------
 
-  ```compile 'com.luciocossio.android:EnhancedList:0.0.1'```
+  ```compile 'com.luciocossio.android:EnhancedList:0.0.2'```
   
 Layout
 ------------------
